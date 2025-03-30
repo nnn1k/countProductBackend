@@ -1,0 +1,19 @@
+from typing import Optional
+
+from pydantic import BaseModel, ConfigDict
+
+
+class CategorySchema(BaseModel):
+    id: int
+    name: str
+    description: Optional[str] = ''
+    storage_id: int
+    created_at: int
+    updated_at: int
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class CategoryCreate(BaseModel):
+    name: str
+    description: Optional[str] = ''
