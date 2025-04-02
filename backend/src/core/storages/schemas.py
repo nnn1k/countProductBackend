@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Sequence
 
 from pydantic import BaseModel, ConfigDict
 
@@ -20,3 +20,15 @@ class StorageSchemaRel(StorageSchema):
 
 class StorageCreate(BaseModel):
     name: str
+
+
+class StorageSchemaResponse(BaseModel):
+    storage: StorageSchema
+
+
+class StoragesSchemaResponse(BaseModel):
+    storages: Sequence[StorageSchema]
+
+
+class StorageSchemaRelResponse(BaseModel):
+    storage: StorageSchemaRel

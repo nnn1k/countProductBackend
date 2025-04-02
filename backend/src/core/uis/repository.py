@@ -42,27 +42,18 @@ class UserInStorageRepository:
         result = await self.session.execute(stmt)
         return result.scalars().first()
 
-    async def check_user_is_owner(self, storage_id: int, user_id: int) -> bool:
+    async def check_user_in_storage(self, storage_id: int, user_id: int, is_owner: bool = False) -> bool:
+        conditions = [
+            UserInStorageOrm.user_id == user_id,
+            UserInStorageOrm.storage_id == storage_id,
+        ]
+        if is_owner:
+            conditions.append(UserInStorageOrm.is_owner)
         stmt = select(
             exists()
             .where(
                 and_(
-                    UserInStorageOrm.user_id == user_id,
-                    UserInStorageOrm.storage_id == storage_id,
-                    UserInStorageOrm.is_owner
-                )
-            )
-        )
-        result = await self.session.execute(stmt)
-        return result.scalar()
-
-    async def check_user_in_storage(self, storage_id: int, user_id: int) -> bool:
-        stmt = select(
-            exists()
-            .where(
-                and_(
-                    UserInStorageOrm.user_id == user_id,
-                    UserInStorageOrm.storage_id == storage_id,
+                    *conditions
                 )
             )
         )

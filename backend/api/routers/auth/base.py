@@ -1,8 +1,7 @@
 from fastapi import APIRouter, Depends, Response
 
-from backend.api.response_schemas import UserSchemaResponse
 from backend.src.core.auth.schemas import UserLogin, UserRegister
-from backend.src.core.users.schemas import UserSchema
+from backend.src.core.users.schemas import UserSchema, UserSchemaResponse
 from backend.src.core.auth.service import AuthService
 from backend.src.core.auth.dependencies import get_auth_service
 

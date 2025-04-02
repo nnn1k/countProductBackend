@@ -104,10 +104,23 @@ class StorageService:
 
     async def get_categories(self, user: UserSchema, storage_id: int) -> Sequence[CategorySchema]:
         await self._uis_serv.check_user_in_storage(storage_id=storage_id, user_id=user.id)
-        categories = await self._category_serv.get_all(storage_id=storage_id)
-        return categories
+        return await self._category_serv.get_all(storage_id=storage_id)
 
     async def get_category(self, user: UserSchema, storage_id: int, category_id: int) -> CategorySchema:
         await self._uis_serv.check_user_in_storage(storage_id=storage_id, user_id=user.id)
-        category = await self._category_serv.get_one(storage_id=storage_id, category_id=category_id)
-        return category
+        return await self._category_serv.get_one(storage_id=storage_id, category_id=category_id)
+
+    async def update_category(
+            self,
+            category_id: int,
+            storage_id: int,
+            new_category: CategoryCreate,
+            user: UserSchema
+    ) -> CategorySchema:
+        await self._uis_serv.check_user_is_owner(storage_id=storage_id, user_id=user.id)
+        return await self._category_serv.update(new_category=new_category, category_id=category_id)
+
+    async def delete_category(self, category_id: int, storage_id: int, user: UserSchema) -> None:
+        await self._uis_serv.check_user_is_owner(storage_id=storage_id, user_id=user.id)
+        await self._category_serv.delete(category_id=category_id)
+

@@ -2,10 +2,13 @@ from typing import List
 
 from fastapi import APIRouter, Depends
 
-from backend.api.response_schemas import StorageSchemaResponse
 from backend.src.core.storages.service import StorageService
 from backend.src.core.storages.dependencies import get_storage_service
-from backend.src.core.storages.schemas import StorageSchema, StorageSchemaRel, StorageCreate
+from backend.src.core.storages.schemas import (
+    StorageCreate,
+    StorageSchemaResponse,
+    StoragesSchemaResponse
+)
 from backend.src.core.users.schemas import UserSchema
 from backend.src.core.auth.dependencies import get_user_by_token
 
@@ -25,7 +28,7 @@ async def create_storage_views(
     return {'storage': storage}
 
 
-@router.get('', response_model=List[StorageSchemaRel], summary='Получить список хранилищ')
+@router.get('', response_model=StoragesSchemaResponse, summary='Получить список хранилищ')
 async def get_all_storage_views(
         user: UserSchema = Depends(get_user_by_token),
         service: StorageService = Depends(get_storage_service)

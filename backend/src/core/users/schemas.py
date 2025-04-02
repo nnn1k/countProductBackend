@@ -15,3 +15,11 @@ class UserSchema(BaseModel):
 
 class UserSchemaRel(UserSchema):
     storages: Optional[List['StorageSchema']] = []
+
+
+class UserSchemaResponse(BaseModel):
+    user: UserSchema
+
+
+class UserSchemaRelResponse(BaseModel):
+    user: UserSchemaRel

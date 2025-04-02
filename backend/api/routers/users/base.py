@@ -1,9 +1,8 @@
 from fastapi import APIRouter, Depends
 
-from backend.api.response_schemas import UserSchemaRelResponse
 from backend.src.core.auth.dependencies import get_user_by_token
 from backend.src.core.users.dependencies import get_user_service
-from backend.src.core.users.schemas import UserSchema
+from backend.src.core.users.schemas import UserSchema, UserSchemaRelResponse
 from backend.src.core.users.service import UserService
 
 router = APIRouter(

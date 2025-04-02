@@ -1,9 +1,12 @@
 from fastapi import APIRouter, Depends
 
-from backend.api.response_schemas import StorageSchemaResponse, StorageSchemaRelResponse
 from backend.src.core.auth.dependencies import get_user_by_token
 from backend.src.core.storages.dependencies import get_storage_service
-from backend.src.core.storages.schemas import StorageSchemaRel, StorageSchema, StorageCreate
+from backend.src.core.storages.schemas import (
+    StorageCreate,
+    StorageSchemaResponse,
+    StorageSchemaRelResponse
+)
 from backend.src.core.storages.service import StorageService
 from backend.src.core.users.schemas import UserSchema
 

@@ -50,7 +50,7 @@ class UserInStorageService:
             raise user_in_storage_not_exist_exc
 
     async def check_user_is_owner(self, storage_id: int, user_id: int) -> None:
-        if not await self.uis_repo.check_user_is_owner(storage_id=storage_id, user_id=user_id):
+        if not await self.uis_repo.check_user_in_storage(storage_id=storage_id, user_id=user_id, is_owner=True):
             raise user_is_not_owner_exc
 
     async def check_user_in_storage(self, storage_id: int, user_id: int) -> None:

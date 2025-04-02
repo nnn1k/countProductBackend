@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 
-from backend.api.response_schemas import StorageSchemaResponse
 from backend.src.core.auth.dependencies import get_user_by_token
 from backend.src.core.storages.dependencies import get_storage_service
+from backend.src.core.storages.schemas import StorageSchemaResponse
 from backend.src.core.storages.service import StorageService
 from backend.src.core.users.schemas import UserSchema
 
@@ -11,7 +11,7 @@ router = APIRouter(
 )
 
 
-@router.post('/via_code', response_model=StorageSchemaResponse,summary='Добавиться в хранилище по коду')
+@router.post('/via_code', response_model=StorageSchemaResponse, summary='Добавиться в хранилище по коду')
 async def add_user_to_code_views(
         code: str,
         user: UserSchema = Depends(get_user_by_token),

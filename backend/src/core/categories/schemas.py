@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Sequence
 
 from pydantic import BaseModel, ConfigDict
 
@@ -17,3 +17,11 @@ class CategorySchema(BaseModel):
 class CategoryCreate(BaseModel):
     name: str
     description: Optional[str] = ''
+
+
+class CategorySchemaResponse(BaseModel):
+    category: CategorySchema
+
+
+class CategoriesSchemaResponse(BaseModel):
+    categories: Sequence[CategorySchema]
