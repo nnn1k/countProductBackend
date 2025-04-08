@@ -28,12 +28,11 @@ class CategoryRepository:
         result = await self.session.execute(stmt)
         return result.scalars().all()
 
-    async def get_one(self, storage_id: int, category_id: int) -> CategoryOrm:
+    async def get_one(self, category_id: int) -> CategoryOrm:
         stmt = (
             select(CategoryOrm)
             .where(
                 and_(
-                    CategoryOrm.storage_id == storage_id,
                     CategoryOrm.id == category_id,
                 )
             )

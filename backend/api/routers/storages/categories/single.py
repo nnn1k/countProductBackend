@@ -11,7 +11,7 @@ router = APIRouter(
 )
 
 
-@router.get('/{category_id}', response_model=CategorySchemaResponse, summary='Посмотреть 1 категорию')
+@router.get('', response_model=CategorySchemaResponse, summary='Посмотреть 1 категорию')
 async def get_one_category(
         category_id: int,
         storage_id: int,
@@ -22,7 +22,7 @@ async def get_one_category(
     return {'category': category}
 
 
-@router.patch('/{category_id}', response_model=CategorySchemaResponse, summary='Обновить категорию')
+@router.patch('', response_model=CategorySchemaResponse, summary='Обновить категорию')
 async def update_category(
         category_id: int,
         storage_id: int,
@@ -39,7 +39,7 @@ async def update_category(
     return {'category': category}
 
 
-@router.delete('/{category_id}', summary='Удалить категорию')
+@router.delete('', summary='Удалить категорию')
 async def delete_category(
         category_id: int,
         storage_id: int,
