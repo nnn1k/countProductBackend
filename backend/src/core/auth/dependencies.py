@@ -12,6 +12,7 @@ from backend.src.core.users.schemas import UserSchema
 from backend.src.lib.classes.AuthJWT import jwt_token
 from backend.src.lib.const import ACCESS_TOKEN, REFRESH_TOKEN
 from backend.src.lib.exc import invalid_token_exc
+from backend.src.config.logger_config.core import logger
 
 
 def get_auth_repo(
@@ -32,29 +33,27 @@ async def get_user_by_token(
         response: Response = None,
         service: UserService = Depends(get_user_service)
 ) -> UserSchema:
-    if access_token is None:
-        user_id = check_refresh_token(refresh_token, response)
-    else:
+    user_id: int | None = None
+    if access_token:
         try:
             user_id = jwt_token.decode_jwt(token=access_token).get("sub")
         except ExpiredSignatureError:
-            user_id = check_refresh_token(refresh_token, response)
-    if not user_id:
-        raise invalid_token_exc
-    return await service.get_user(id=int(user_id))
+            logger.info('access token expired')
 
+    if not user_id and refresh_token:
+        try:
+            new_access_token, new_refresh_token = jwt_token.token_refresh(refresh_token)
+            if not (new_access_token and new_refresh_token):
+                raise invalid_token_exc
 
-def check_refresh_token(refresh_token, response) -> int:
-    if refresh_token is None:
-        raise invalid_token_exc
-    try:
-        new_access_token, new_refresh_token = jwt_token.token_refresh(refresh_token)
-        if new_access_token is None or new_refresh_token is None:
+            user_id = jwt_token.decode_jwt(token=new_access_token).get("sub")
+            if not user_id:
+                raise invalid_token_exc
+
+            response.set_cookie(key=ACCESS_TOKEN, value=new_access_token)
+            response.set_cookie(key=REFRESH_TOKEN, value=new_refresh_token)
+
+        except ExpiredSignatureError:
             raise invalid_token_exc
 
-        response.set_cookie(key=ACCESS_TOKEN, value=new_access_token)
-        response.set_cookie(key=REFRESH_TOKEN, value=new_refresh_token)
-        user_id = jwt_token.decode_jwt(token=new_access_token).get("sub")
-        return user_id
-    except Exception:
-        raise invalid_token_exc
+    return await service.get_user(id=int(user_id))

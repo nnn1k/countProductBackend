@@ -1,4 +1,3 @@
-
 from pydantic import BaseModel, ConfigDict
 
 from backend.src.lib.classes.enum_classes.unitenum import UnitEnum
@@ -23,3 +22,7 @@ class ProductCreate(BaseModel):
     unit: UnitEnum
     quantity: float
     recommended: float
+
+
+class ProductSchemaResponse(BaseModel):
+    product: ProductSchema

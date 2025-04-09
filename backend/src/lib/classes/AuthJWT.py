@@ -1,5 +1,6 @@
 from datetime import timedelta, datetime, UTC
 from pathlib import Path
+from typing import Dict
 
 import jwt
 from pydantic import BaseModel
@@ -42,7 +43,7 @@ class AuthJWT:
     def decode_jwt(
             self,
             token: str | bytes,
-    ):
+    ) -> Dict:
         public_key: str = self.public_key_path.read_text()
         decoded = jwt.decode(token, public_key, algorithms=[self.algorithm])
         return decoded

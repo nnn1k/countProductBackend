@@ -4,6 +4,8 @@ from sqlalchemy.exc import IntegrityError
 
 from backend.src.core.categories.schemas import CategoryCreate, CategorySchema
 from backend.src.core.categories.service import CategoryService
+from backend.src.core.products.schemas import ProductCreate, ProductSchema
+from backend.src.core.products.service import ProductService
 from backend.src.core.storages.repository import StorageRepository
 from backend.src.core.storages.schemas import StorageSchema, StorageSchemaRel, StorageCreate
 from backend.src.core.users.schemas import UserSchema
@@ -11,10 +13,8 @@ from backend.src.core.uis.service import UserInStorageService
 from backend.src.lib.exc import (
     bad_generation_code_exc,
     user_in_storage_not_exist_exc,
-    user_in_storage_exist_exc,
-    user_is_not_owner_exc,
-    bad_category_name_exc,
-    bad_storage_name_exc, storage_not_found_exc
+    bad_storage_name_exc,
+    storage_not_found_exc
 )
 from backend.src.lib.get_code import get_random_code
 
@@ -25,10 +25,12 @@ class StorageService:
             storage_repo: StorageRepository,
             uis_serv: UserInStorageService,
             category_serv: CategoryService,
+            product_serv: ProductService,
     ) -> None:
         self._storage_repo = storage_repo
         self._uis_serv = uis_serv
         self._category_serv = category_serv
+        self._product_serv = product_serv
 
     async def create(self, new_storage: StorageCreate, user: UserSchema) -> StorageSchema:
         code = await self._generate_unique_storage_code()
@@ -124,3 +126,12 @@ class StorageService:
         await self._uis_serv.check_user_is_owner(storage_id=storage_id, user_id=user.id)
         await self._category_serv.delete(category_id=category_id)
 
+    async def add_product(
+            self,
+            category_id: int,
+            storage_id: int,
+            new_product: ProductCreate,
+            user: UserSchema
+    ) -> ProductSchema:
+        await self._uis_serv.check_user_is_owner(storage_id=storage_id, user_id=user.id)
+        return await self._product_serv.create(new_product=new_product, category_id=category_id, storage_id=storage_id)
