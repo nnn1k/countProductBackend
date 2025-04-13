@@ -135,3 +135,21 @@ class StorageService:
     ) -> ProductSchema:
         await self._uis_serv.check_user_is_owner(storage_id=storage_id, user_id=user.id)
         return await self._product_serv.create(new_product=new_product, category_id=category_id, storage_id=storage_id)
+
+    async def get_products(self, category_id: int, storage_id: int, user: UserSchema) -> Sequence[ProductSchema]:
+        await self._uis_serv.check_user_in_storage(storage_id=storage_id, user_id=user.id)
+        return await self._product_serv.get_all(category_id=category_id, storage_id=storage_id)
+
+    async def get_product(self, product_id: int, storage_id: int, user: UserSchema) -> ProductSchema:
+        await self._uis_serv.check_user_in_storage(storage_id=storage_id, user_id=user.id)
+        return await self._product_serv.get_one(product_id=product_id)
+
+    async def update_product(
+            self, new_product: ProductCreate, category_id: int, storage_id: int, product_id: int, user: UserSchema
+    ) -> ProductSchema:
+        await self._uis_serv.check_user_in_storage(storage_id=storage_id, user_id=user.id)
+        return await self._product_serv.update(product_id=product_id, new_product=new_product, category_id=category_id)
+
+    async def delete_product(self, product_id: int, storage_id: int, user: UserSchema) -> None:
+        await self._uis_serv.check_user_in_storage(storage_id=storage_id, user_id=user.id)
+        await self._product_serv.delete(product_id=product_id)

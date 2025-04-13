@@ -38,7 +38,7 @@ class UserInStorageService:
             storage_id: int,
             rel: bool = False
     ) -> StorageSchemaRel | StorageSchema:
-        storage = await self.uis_repo.get_one_storage_on_user(user.id, storage_id)
+        storage = await self.uis_repo.get_one_storage_on_user(user_id=user.id, storage_id=storage_id, rel=rel)
         if rel:
             return StorageSchemaRel.model_validate(storage)
         return StorageSchema.model_validate(storage)

@@ -24,7 +24,7 @@ class AuthJWT:
     ACCESS_TOKEN_TYPE = 'access'
     REFRESH_TOKEN_TYPE = 'refresh'
 
-    def encode_jwt(
+    def _encode_jwt(
             self,
             payload: dict,
             expire_timedelta: timedelta | None = None,
@@ -48,7 +48,7 @@ class AuthJWT:
         decoded = jwt.decode(token, public_key, algorithms=[self.algorithm])
         return decoded
 
-    def create_jwt(
+    def _create_jwt(
             self,
             token_type: str,
             token_data: dict,
@@ -58,19 +58,19 @@ class AuthJWT:
         jwt_payload.update(token_data)
         if jwt_payload.get('sub'):
             jwt_payload['sub'] = str(token_data['sub'])
-        return self.encode_jwt(
+        return self._encode_jwt(
             payload=jwt_payload,
             expire_timedelta=expire_timedelta
         )
 
     def create_access_token(self, payload: dict) -> str:
-        return self.create_jwt(
+        return self._create_jwt(
             token_type=self.ACCESS_TOKEN_TYPE,
             token_data=payload
         )
 
     def create_refresh_token(self, payload: dict) -> str:
-        return self.create_jwt(
+        return self._create_jwt(
             token_type=self.REFRESH_TOKEN_TYPE,
             token_data=payload,
             expire_timedelta=timedelta(days=self.refresh_token_expire_days)

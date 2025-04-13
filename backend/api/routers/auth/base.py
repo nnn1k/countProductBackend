@@ -21,7 +21,7 @@ async def login_views(
     return {'user': user}
 
 
-@router.post('/register', response_model=UserSchema, summary='Регистрация')
+@router.post('/register', response_model=UserSchemaResponse, summary='Регистрация')
 async def register_views(
         register_schema: UserRegister,
         response: Response,

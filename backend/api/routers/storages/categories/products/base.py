@@ -26,3 +26,14 @@ async def create_product(
         user=user
     )
     return {'product': product}
+
+
+@router.get('', summary='Посмотреть продукты в этой категории')
+async def get_products(
+        storage_id: int,
+        category_id: int,
+        user: UserSchema = Depends(get_user_by_token),
+        service: StorageService = Depends(get_storage_service)
+):
+    products = await service.get_products(category_id=category_id, storage_id=storage_id, user=user)
+    return {'products': products}
