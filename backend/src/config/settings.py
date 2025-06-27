@@ -24,8 +24,16 @@ class RunConfig(BaseModel):
 
 
 class JWTConfig(BaseModel):
-    private_key: str = BASE_DIR / 'certs' / 'jwt-private.pem'
-    public_key: str = BASE_DIR / 'certs' / 'jwt-public.pem'
+    private_key_path: Path = BASE_DIR / 'certs' / 'jwt-private.pem'
+    public_key_path: Path = BASE_DIR / 'certs' / 'jwt-public.pem'
+
+    @property
+    def private_key(self):
+        return self.private_key_path.read_text()
+
+    @property
+    def public_key(self):
+        return self.public_key_path.read_text()
 
 
 class Settings(BaseSettings):

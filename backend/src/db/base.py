@@ -1,7 +1,15 @@
 from typing import Annotated
 
 from sqlalchemy import text
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.orm import mapped_column, DeclarativeBase
+
+from backend.src.config.settings import settings
+
+engine = create_async_engine(
+    url=settings.db.url
+)
+session_factory = async_sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
 
 int_pk = Annotated[
     int,
@@ -26,3 +34,6 @@ updated_at = Annotated[
 
 class Base(DeclarativeBase):
     ...
+
+
+

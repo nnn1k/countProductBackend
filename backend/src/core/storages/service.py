@@ -16,7 +16,7 @@ from backend.src.lib.exc import (
     bad_storage_name_exc,
     storage_not_found_exc
 )
-from backend.src.lib.get_code import get_random_code
+from backend.src.lib.utils import get_random_code
 
 
 class StorageService:

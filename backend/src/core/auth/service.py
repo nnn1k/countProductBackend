@@ -1,7 +1,6 @@
 from fastapi import Response
 
 from backend.src.lib.classes.AuthJWT import jwt_token
-from backend.src.lib.const import ACCESS_TOKEN, REFRESH_TOKEN
 
 from backend.src.core.auth.schemas import UserLogin, UserRegister
 
@@ -62,7 +61,7 @@ class AuthService:
         access_token = jwt_token.create_access_token(payload=payload)
         refresh_token = jwt_token.create_refresh_token(payload=payload)
 
-        response.set_cookie(ACCESS_TOKEN, access_token, max_age=60 * 60 * 24 * 365)
-        response.set_cookie(REFRESH_TOKEN, refresh_token, max_age=60 * 60 * 24 * 365)
+        response.set_cookie(jwt_token.ACCESS_TOKEN, access_token, max_age=60 * 60 * 24 * 365)
+        response.set_cookie(jwt_token.REFRESH_TOKEN, refresh_token, max_age=60 * 60 * 24 * 365)
 
 

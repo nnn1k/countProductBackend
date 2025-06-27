@@ -1,5 +1,4 @@
-from backend.src.db.base import Base
-from backend.src.db.core import engine
+from backend.src.db.base import Base, engine
 
 
 async def recreate():

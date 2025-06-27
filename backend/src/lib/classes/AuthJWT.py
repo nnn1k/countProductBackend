@@ -1,6 +1,6 @@
 from datetime import timedelta, datetime, UTC
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Optional
 
 import jwt
 from pydantic import BaseModel
@@ -9,27 +9,26 @@ from backend.src.config.settings import settings
 
 
 class Token(BaseModel):
-    access_token: str
+    access_token: str | None = None
     refresh_token: str | None = None
     token_type: str = 'Bearer'
 
 
 class AuthJWT:
-    private_key_path: Path = settings.jwt.private_key
-    public_key_path: Path = settings.jwt.public_key
+    private_key: str = settings.jwt.private_key
+    public_key: str = settings.jwt.public_key
     algorithm: str = "RS256"
-    access_token_expire_minutes: int = 30
+    access_token_expire_minutes: int = 15
     refresh_token_expire_days: int = 7
-    TOKEN_TYPE_FIELD = 'type'
-    ACCESS_TOKEN_TYPE = 'access'
-    REFRESH_TOKEN_TYPE = 'refresh'
+    TOKEN_TYPE_FIELD: str = 'type'
+    ACCESS_TOKEN: str = 'access_token'
+    REFRESH_TOKEN: str = 'refresh_token'
 
     def _encode_jwt(
             self,
             payload: dict,
             expire_timedelta: timedelta | None = None,
     ) -> str:
-        private_key = self.private_key_path.read_text()
         to_encode = payload.copy()
         now = datetime.now(UTC)
         if expire_timedelta:
@@ -37,15 +36,14 @@ class AuthJWT:
         else:
             expire = now + timedelta(minutes=self.access_token_expire_minutes)
         to_encode.update(exp=expire, iat=now)
-        encoded = jwt.encode(to_encode, private_key, algorithm=self.algorithm)
+        encoded = jwt.encode(to_encode, self.private_key, algorithm=self.algorithm)
         return encoded
 
     def decode_jwt(
             self,
             token: str | bytes,
     ) -> Dict:
-        public_key: str = self.public_key_path.read_text()
-        decoded = jwt.decode(token, public_key, algorithms=[self.algorithm])
+        decoded = jwt.decode(token, self.public_key, algorithms=[self.algorithm])
         return decoded
 
     def _create_jwt(
@@ -65,26 +63,26 @@ class AuthJWT:
 
     def create_access_token(self, payload: dict) -> str:
         return self._create_jwt(
-            token_type=self.ACCESS_TOKEN_TYPE,
+            token_type=self.ACCESS_TOKEN,
             token_data=payload
         )
 
     def create_refresh_token(self, payload: dict) -> str:
         return self._create_jwt(
-            token_type=self.REFRESH_TOKEN_TYPE,
+            token_type=self.REFRESH_TOKEN,
             token_data=payload,
             expire_timedelta=timedelta(days=self.refresh_token_expire_days)
         )
 
-    def token_refresh(self, refresh_token: str) -> tuple[str, str] | tuple[None, None]:
+    def token_refresh(self, refresh_token: str) -> Optional[Token]:
         try:
             decoded_refresh_token = self.decode_jwt(refresh_token)
             access_token = self.create_access_token(decoded_refresh_token)
             refresh_token = self.create_refresh_token(decoded_refresh_token)
-            return access_token, refresh_token
+            return Token(access_token=access_token, refresh_token=refresh_token)
         except Exception as e:
             print(f'error:{e}')
-            return None, None
+            return None
 
 
 jwt_token = AuthJWT()

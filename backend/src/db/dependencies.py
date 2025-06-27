@@ -1,4 +1,5 @@
-from backend.src.db.core import session_factory
+from backend.src.config.log_config import logger
+from backend.src.db.base import session_factory
 
 
 async def get_db():
@@ -6,10 +7,10 @@ async def get_db():
         try:
             yield session
             await session.commit()
-            print('commit')
+            logger.debug("commit")
         except Exception as e:
             await session.rollback()
-            print(f'Rollback due to: {str(e)}')
+            logger.debug(f'Rollback due to: {str(e)}')
             raise e
         finally:
             await session.close()
