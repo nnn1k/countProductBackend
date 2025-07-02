@@ -23,6 +23,12 @@ class StorageOrm(Base):
         lazy='noload'
     )
 
+    categories: Mapped[List['CategoryOrm']] = relationship(
+        'CategoryOrm',
+        back_populates='storage',
+        lazy='noload'
+    )
+
     __table_args__ = (
         UniqueConstraint('name', 'creator_id', name='unique_storage_name_creator_id'),
     )

@@ -5,7 +5,7 @@ from backend.src.config.add_handlers import global_exception_handler, log_reques
 
 from backend.api.routers.base import backend_router
 from backend.src.lib.utils import check_platform
-from backend.src.core.rebuild import rebuild_schemas
+from backend.src.services.rebuild import rebuild_schemas
 
 
 def create_app() -> FastAPI:

@@ -3,7 +3,7 @@ import time
 from fastapi import status, Request
 from fastapi.responses import JSONResponse
 
-from backend.src.config.log_config import logger
+from backend.src.config.logger_config import logger
 
 
 async def global_exception_handler(request: Request, exc: Exception):
@@ -18,17 +18,23 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 async def log_requests(request: Request, call_next):
     start_time = time.time()
-
+    logger.info('--------------')
     response = await call_next(request)
 
     process_time = (time.time() - start_time) * 1000
     formatted_process_time = f"{process_time:.2f}"
 
+    if response.status_code == 307 and "location" in response.headers:
+        location = response.headers["location"]
+        if location.startswith("http://"):
+            response.headers["location"] = location.replace("http://", "https://")
+
     logger.info(
-        f"\n method={request.method}"
-        f"\n path={request.url.path}"
-        f"\n status_code={response.status_code}"
-        f"\n processed_in={formatted_process_time}ms"
+        f"\nmethod={request.method}"
+        f"\npath={request.url.path}"
+        f"\nstatus_code={response.status_code}"
+        f"\nprocessed_in={formatted_process_time}ms"
     )
 
+    logger.info('--------------\n')
     return response

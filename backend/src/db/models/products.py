@@ -3,7 +3,7 @@ from sqlalchemy.dialects.postgresql import ENUM
 from sqlalchemy.orm import Mapped, mapped_column
 
 from backend.src.db.base import Base, int_pk, created_at, updated_at
-from backend.src.lib.classes.enum_classes.unitenum import UnitEnum
+from backend.src.lib.classes.enums.unitenum import UnitEnum
 
 
 class ProductOrm(Base):
