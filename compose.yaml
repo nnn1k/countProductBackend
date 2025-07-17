@@ -1,0 +1,14 @@
+services:
+  fastapi_app:
+    build:
+      context: .
+    ports:
+      - "${APP_RUN__PORT}:${APP_RUN__PORT}"
+    env_file:
+      - .env
+    environment:
+      - APP_RUN__HOST=${APP_RUN__HOST}
+      - APP_RUN__PORT=${APP_RUN__PORT}
+    volumes:
+      - ./logs:/app/logs
+      - ./:/app
