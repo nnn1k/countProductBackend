@@ -4,8 +4,8 @@ from sqlalchemy.exc import IntegrityError
 
 from app.domains.products.repository import ProductRepository
 from app.domains.products.schemas import ProductSchema, ProductCreate
-from app.utils.exc import bad_product_name_exc, product_not_found_exc, user_is_not_owner_exc, \
-    user_in_storage_not_exist_exc
+from app.domains.products.exc import bad_product_name_exc, product_not_found_exc
+from app.domains.uis.exc import user_in_storage_not_exist_exc, user_is_not_owner_exc
 from app.domains.uis.service import UserInStorageService
 from app.domains.users.schemas import UserSchema
 

@@ -1,9 +1,9 @@
 from fastapi import FastAPI
+from fastapi.responses import ORJSONResponse
 
 from app.utils.add_cors import setup_cors
-from app.utils.add_handlers import global_exception_handler, log_requests
+from app.utils.add_handlers import register_exceptions_handler, register_logger_middleware
 
-from app.base_router import backend_router
 from app.utils.utils import check_platform
 from app.utils.rebuild import rebuild_schemas
 
@@ -12,11 +12,10 @@ def create_app() -> FastAPI:
     check_platform()
     rebuild_schemas()
 
-    app = FastAPI()
-    app.exception_handler(Exception)(global_exception_handler)
-    app.middleware("http")(log_requests)
-    setup_cors(app)
+    app = FastAPI(default_response_class=ORJSONResponse)
 
-    app.include_router(backend_router)
+    register_exceptions_handler(app)
+    register_logger_middleware(app)
+    setup_cors(app)
 
     return app

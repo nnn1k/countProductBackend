@@ -10,12 +10,8 @@ from app.domains.storages.schemas import (
 )
 from app.domains.users.schemas import UserSchema
 from app.domains.uis.service import UserInStorageService
-from app.utils.exc import (
-    bad_generation_code_exc,
-    user_in_storage_not_exist_exc,
-    bad_storage_name_exc,
-    storage_not_found_exc, user_is_not_owner_exc,
-)
+from app.domains.storages.exc import bad_storage_name_exc, bad_generation_code_exc, storage_not_found_exc
+from app.domains.uis.exc import user_in_storage_not_exist_exc, user_is_not_owner_exc
 from app.utils.utils import get_random_code
 
 
@@ -82,7 +78,7 @@ class StorageService:
             raise storage_not_found_exc
 
     async def _generate_unique_storage_code(
-        self, min_length: int = 4, max_length: int = 8, attempts: int = 5
+        self, min_length: int = 6, max_length: int = 6, attempts: int = 10
     ) -> str:
         for length in range(min_length, max_length + 1):
             for _ in range(attempts):

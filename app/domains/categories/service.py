@@ -4,8 +4,8 @@ from sqlalchemy.exc import IntegrityError
 
 from app.domains.categories.repository import CategoryRepository
 from app.domains.categories.schemas import CategoryCreate, CategorySchema
-from app.utils.exc import bad_category_name_exc, category_not_found_exc, user_is_not_owner_exc, \
-    user_in_storage_not_exist_exc
+from app.domains.categories.exc import category_not_found_exc, bad_category_name_exc
+from app.domains.uis.exc import user_in_storage_not_exist_exc, user_is_not_owner_exc
 from app.domains.uis.service import UserInStorageService
 from app.domains.users.schemas import UserSchema
 

@@ -5,10 +5,7 @@ from sqlalchemy.exc import IntegrityError
 from app.domains.users.schemas import UserSchema
 from app.domains.storages.schemas import StorageSchemaRel, StorageSchema
 from app.domains.uis.repository import UserInStorageRepository
-from app.utils.exc import (
-    user_in_storage_exist_exc,
-    user_in_storage_not_exist_exc, user_is_not_owner_exc,
-)
+from app.domains.uis.exc import user_in_storage_exist_exc, user_in_storage_not_exist_exc, user_is_not_owner_exc
 
 
 class UserInStorageService:

@@ -12,8 +12,8 @@ from app.domains.storages.routes import router as base_storage_router
 from app.domains.categories.routes import router as category_router
 from app.domains.products.routes import router as product_router
 
-backend_router = APIRouter(
-    prefix='/api'
+backend_router_v1 = APIRouter(
+    prefix='/api/v1'
 )
 
 test_router = APIRouter(
@@ -21,27 +21,25 @@ test_router = APIRouter(
     tags=["test"],
 )
 
-backend_router.include_router(auth_router)
+backend_router_v1.include_router(auth_router)
 
-backend_router.include_router(user_router)
+backend_router_v1.include_router(user_router)
 
-backend_router.include_router(base_storage_router)
+backend_router_v1.include_router(base_storage_router)
 
-backend_router.include_router(category_router)
+backend_router_v1.include_router(category_router)
 
-backend_router.include_router(product_router)
-
-backend_router.include_router(test_router)
+backend_router_v1.include_router(product_router)
 
 
-@test_router.get('/test_db', summary='Проверка времени подключения бд')
+@test_router.get('/test_db', summary='Проверка подключения бд')
 async def get_test_db(
         session: AsyncSession = Depends(get_db)
 ):
     res = await session.execute(text('SELECT EXTRACT(EPOCH FROM CURRENT_TIMESTAMP)::int'))
-    result = res.scalars().one_or_none()
+    result = res.scalars().first()
     return {
-        'result': result,
+        "ok": True
     }
 
 
@@ -51,3 +49,6 @@ async def recreate_db():
     return {
         'msg': 'Recreate database successfully'
     }
+
+
+backend_router_v1.include_router(test_router)

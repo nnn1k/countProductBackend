@@ -1,3 +1,4 @@
+import datetime
 from typing import List
 
 from pydantic import BaseModel, ConfigDict
@@ -13,8 +14,8 @@ class ProductSchema(BaseModel):
     storage_id: int
     quantity: float
     recommended: float
-    created_at: int
-    updated_at: int
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
 
     model_config = ConfigDict(from_attributes=True)
 

@@ -1,3 +1,4 @@
+import datetime
 from typing import List, Optional, Sequence
 
 from pydantic import BaseModel, ConfigDict
@@ -8,8 +9,8 @@ class StorageSchema(BaseModel):
     name: str
     code: str
     creator_id: int
-    created_at: int
-    updated_at: int
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
 
     model_config = ConfigDict(from_attributes=True)
 

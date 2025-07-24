@@ -1,8 +1,9 @@
+import datetime
 from typing import Annotated
 
-from sqlalchemy import text
+from sqlalchemy import text, TIMESTAMP, func
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
-from sqlalchemy.orm import mapped_column, DeclarativeBase
+from sqlalchemy.orm import mapped_column, DeclarativeBase, Mapped
 
 from app.settings import settings
 
@@ -17,23 +18,22 @@ int_pk = Annotated[
 ]
 
 created_at = Annotated[
-    int,
+    datetime,
     mapped_column(
-        server_default=text("EXTRACT(EPOCH FROM CURRENT_TIMESTAMP)::int"),
+        TIMESTAMP(timezone=True),
+        server_default=func.now()
     )
 ]
 
 updated_at = Annotated[
-    int,
+    datetime,
     mapped_column(
-        server_default=text("EXTRACT(EPOCH FROM CURRENT_TIMESTAMP)::int"),
-        onupdate=text("EXTRACT(EPOCH FROM CURRENT_TIMESTAMP)::int"),
+        TIMESTAMP(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now()
     )
 ]
 
 
 class Base(DeclarativeBase):
     ...
-
-
-
