@@ -1,8 +1,8 @@
 import uvicorn
 
-from backend.src.config.settings import settings
+from app.settings import settings
 
-from create_fastapi_app import create_app
+from app.utils.create_fastapi_app import create_app
 
 app = create_app()
 
